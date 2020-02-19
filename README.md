@@ -5,6 +5,7 @@ E-mail: boldar99@gmail.com
 
 ## Tantárgyi Adatok
 [Tantárgy honlapja](http://lambda.inf.elte.hu/Index.xml)
+
 [Követelményrendszer](http://lambda.inf.elte.hu/Requirements.xml)
 
 ## Segédanyagok
