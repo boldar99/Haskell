@@ -2,19 +2,19 @@
 
 module Lesson2 where
 
-import Prelude hiding (head)
+import Prelude hiding (head, null)
 
 headInt ∷ [Int] → Int
-headInt = undefined
+headInt (x:_) = x
+headInt [] = error "The list must contain at least one element"
 
 {-
-headInt [5, 6, 7] == 5
+headInt [5, 6, 7] == 5(x:_)
 headInt [10] == 10
 -}
 
 tailChar ∷ [Char] → [Char]
-tailChar = undefined
-
+tailChar (_:xs) = xs 
 {-
 tailChar ['a', 'b', 'c'] == ['b', 'c']
 tailChar "abc" == "bc"
@@ -22,15 +22,16 @@ tailChar ['_'] == []
 -}
 
 head ∷ [a] → a
-head = undefined
+head (x:_) = x
 
 {-
 head [1..10] == 1
-head "Haskell" = 'H'
+head "Haskell" == 'H'
 -}
 
 null ∷ [a] → Bool
-null = undefined
+null [] = True
+null _ = False
 
 {-
 null ""
@@ -40,7 +41,7 @@ not $ null "Haskell"
 -}
 
 singleton ∷ a → [a]
-singleton = undefined
+singleton x = [x]
 
 {-
 singleton 'a' == "a"
@@ -48,6 +49,4 @@ singleton "a" == ["a"]
 singleton 1 == [1]
 singleton True == [True]
 -}
-
-
-
+ 
