@@ -1,7 +1,5 @@
 module Lesson5 where
 
-import RandomStudentGenerator
-
 sum :: Num a => [a] -> a
 sum = undefined
 
