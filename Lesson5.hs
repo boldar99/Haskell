@@ -39,7 +39,9 @@ merge xs     []     = xs
 merge (x:xs) (y:ys) = x : y : merge xs ys
 
 zip :: [a] -> [b] -> [(a,b)]
-zip = undefined
+zip []     ys     = []
+zip  xs    []     = []
+zip (x:xs) (y:ys) = (x, y) : zip xs ys
 
 isPrefixOf :: Eq a => [a] -> [a] -> Bool
 isPrefixOf [] [] = True
