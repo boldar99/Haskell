@@ -1,6 +1,8 @@
 module HigherOrderFunctions where
 
 import Prelude hiding (flip, (.), ($), curry, uncurry, iterate, until, any, all, map, filter, takeWhile, dropWhile, span, break, zipWith, foldr)
+import RandomStudentGenerator
+import Data.Char (toLower)
 
 -- http://learnyouahaskell.com/higher-order-functions
 
@@ -10,36 +12,35 @@ import Prelude hiding (flip, (.), ($), curry, uncurry, iterate, until, any, all,
 -- :i (->)
 
 add7' :: Int -> Int
-add7' = undefined
+add7' n = n + 7
 {-
 add7' 8 == 15
 add7' 0 == 7
 -}
 
 add7 :: Int -> Int
-add7 = undefined
+add7 = (+ 7) -- (+) 7
 {-
 add7 8 == 15
 add7 0 == 7
 -}
 
 multiplyBy5' :: Int -> Int
-multiplyBy5' = undefined
+multiplyBy5' n = n * 5
 {-
 multiplyBy5' 5 == 25
 multiplyBy5' 2 == 10
 -}
 
 multiplyBy5 :: Int -> Int
-multiplyBy5 = undefined
+multiplyBy5 = (*) 5
 {-
 multiplyBy5 5 == 25
 multiplyBy5 2 == 10
 -}
 
 max5 :: Int -> Int
-max5 = undefined
--- max5 n = if n > 5 then n else 5
+max5 = max 5 
 {-
 max5 10 == 10
 max5 5 == 5
@@ -47,7 +48,7 @@ max5 0 == 5
 -}
 
 isUpper :: Char -> Bool
-isUpper = undefined
+isUpper = flip elem ['A'..'Z']
 {-
 isUpper 'A'
 not (isUpper 'a')
@@ -56,7 +57,9 @@ not (isUpper 'a')
 faculties = ["ik", "ttk", "tátk", "ájk", "btk"] -- ...
 
 isFaculty :: String -> Bool
-isFaculty = undefined
+isFaculty s = (toLowerStr s) `elem` faculties
+    where
+        toLowerStr str = [toLower c | c <- str]
 {-
 isFaculty "ik"
 isFaculty "TTK"
@@ -68,7 +71,7 @@ not (isFaculty "GTI")
 
 
 apply :: (a -> b) -> a -> b
-apply = undefined
+apply f x = f x
 {-
 apply add7 4 == 11
 apply (const 5) 0 == 5
@@ -76,7 +79,7 @@ apply abs (-7) == 7
 -}
 
 applyTwice :: (a -> a) -> a -> a
-applyTwice = undefined
+applyTwice f x = f (f x)
 {-
 applyTwice add7 4 == 18
 applyTwice (const 5) 0 == 5
@@ -84,7 +87,8 @@ applyTwice tail [1..10] == [3..10]
 -}
 
 applyN :: Int -> (a -> a) -> a -> a
-applyN = undefined
+applyN 0 _ x = x
+applyN n f x = f (applyN (n-1) f x)
 {-
 applyN 10 add7 4 == 74
 applyN 10 abs (-7) == 7
@@ -92,15 +96,17 @@ applyN 10 abs (-7) == 7
 
 --flip :: (a -> b -> c) -> b -> a -> c
 flip :: (a -> b -> c) -> (b -> a -> c)
-flip = undefined
+flip f b a = f a b
+--flip f = \b a -> f a b
+-- f a b ---> f b a
 {-
 flip apply 5 add7 == 12
 flip (+) 1 2 == 3
 -}
 
-(.) ::  (b -> c) -> (a -> b) -> (a -> c)
+(.) ::  (b -> c) -> (a -> b) -> a -> c
 infixr 9 .
-(.) f g  = undefined
+(.) f g a = f (g a)
 -- f . g = undefined
 {-
 (add7 . multiplyBy5) 1 == 12
@@ -109,7 +115,7 @@ infixr 9 .
 
 ($) :: (a -> b) -> a -> b
 infixr 0 $
-($) = undefined
+($) f a = f a
 {-
 map ($ 3) [(4+), (10*), (^2)] == [7,30,9]
 not $ isFaculty "GTI"
@@ -118,16 +124,16 @@ not $ isFaculty "GTI"
 -- ($!) ugyanez, csak a "kiértékeli" a paramétert
 
 curry :: ((a, b) -> c) -> a -> b -> c
-curry = undefined
+curry f a b = f (a,b)
 {-
 f (x,y) = sqrt (x**2 + abs y)
 uf = curry f
 fx = uf 1
-fx 0 == 0
+fx 0 == 1
 -}
 
 uncurry :: (a -> b -> c) -> (a, b) -> c
-uncurry = undefined
+uncurry f (a,b) = (f a) b
 {-
 add = uncurry (+)
 add (7,8) == 15
@@ -140,7 +146,9 @@ add (7,8) == 15
 
 
 map :: (a -> b) -> [a] -> [b]
-map = undefined
+map _ []     = []
+map f (x:xs) = f x : map f xs
+--map f ls = [f x | x <- ls]
 {-
 map (\n -> n + 2) [] == []
 map (\n -> n + 2) [2,3,4] == [4,5,6]
@@ -148,7 +156,9 @@ map even [2,3,4] == [True, False, True]
 -}
 
 filter :: (a -> Bool) -> [a] -> [a]
-filter = undefined
+filter _ [] = []
+filter f (x:xs) = if f x then x : filter f xs else filter f xs
+--filter f ls = [x | x <- ls, f x]
 {-
 filter (\n -> n > 5) [] == []
 filter (\n -> n > 5) [1,2,5,6,0] == [6]
@@ -160,6 +170,9 @@ filter (elem 0) [[5,6],[4,1,2,0],[0,5]] == [[4,1,2,0],[0,5]]
     Definiálj egy upperToLower nevű függvényt, mely minden nagybetűt kisbetűvé 
     alakít, a többit eldobja!
 -}
+upperToLower :: String -> String
+upperToLower str = map toLower (filter isUpper str)
+-- upperToLower str = [toLower c | c <- str, isUpper c]
 {-
 upperToLower "" == ""
 upperToLower "Hello World!" == "hw"
@@ -167,7 +180,7 @@ upperToLower "haSKell" == "sk"
 -}
 
 iterate :: (a -> a) -> a -> [a]
-iterate = undefined
+iterate f x = x : iterate f (f x)
 {-
 take 10 $ iterate (+1) 0 == [0,1,2,3,4,5,6,7,8,9]
 take 3 $ iterate tail [1..5] == [[1,2,3,4,5],[2,3,4,5],[3,4,5]]
@@ -295,4 +308,3 @@ foldl (\a _ -> a + 1) 0 [1,2,3,0,1,23] == length [1,2,3,0,1,23]
 --------------------------------------------------------------------------------
 -- Ha megvan minden, ebből a még nem megcsinált feladatokat is csináld meg
 -- https://people.inf.elte.hu/poor_a/fp11.pdf
-
