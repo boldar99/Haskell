@@ -1,8 +1,9 @@
 module HigherOrderFunctions where
 
-import Prelude hiding (flip, (.), ($), curry, uncurry, iterate, until, any, all, map, filter, takeWhile, dropWhile, span, break, zipWith, foldr)
+import Prelude hiding (flip, (.), ($), curry, uncurry, iterate, any, all, map, filter, takeWhile, dropWhile, span, break, zipWith, foldr)
 import RandomStudentGenerator
 import Data.Char (toLower)
+import Data.List (intersect)
 
 -- http://learnyouahaskell.com/higher-order-functions
 
@@ -186,8 +187,6 @@ take 10 $ iterate (+1) 0 == [0,1,2,3,4,5,6,7,8,9]
 take 3 $ iterate tail [1..5] == [[1,2,3,4,5],[2,3,4,5],[3,4,5]]
 -}
 
-until :: (a -> Bool) -> (a -> a) -> a -> a
-until = undefined
 {-
 until (\ls -> length ls < 20) (\(x:xs) -> filter (/= x) xs) $ concat [[i..100] | i <- [1,3,4,5,77,1]] == [98,99,100,98,99,100,98,99,100,98,99,100,98,99,100,98,99,100]
 snd $ until (\(y,x) -> abs (x*x - 2) < 1.0e-15) (\(a,b) -> let c = (a+b)/2 in if c*c < 2 then (c,b) else (a,c)) (1,2) == 1.4142135623730954
@@ -199,16 +198,22 @@ snd $ until (\(y,x) -> abs (x*x - 2) < 1.0e-15) (\(a,b) -> let c = (a+b)/2 in if
     Írj teszteseteket is.
 -}
 
-any :: Foldable t => (a -> Bool) -> t a -> Bool
-any = undefined
+root k n e = snd $ until (\(y,x) -> abs (x^n - k) < e) (\(a,b) -> let c = (a+b)/2 in if c*c < 2 then (c,b) else (a,c)) (0, k)
+
+
+any :: (a -> Bool) -> [a] -> Bool
+any f [] = False
+any f (x:xs) 
+  | f x == True = True
+  | otherwise = any f xs
 {-
 any even [1,2,5,9,2,0,3,2]
 any (>3) [1..10]
 any (id) [False, True]
 -}
 
-all :: Foldable t => (a -> Bool) -> t a -> Bool
-all = undefined
+all :: (a -> Bool) -> [a] -> Bool
+all f ls = and $ map f ls
 {-
 not $ all (>3) [1..10]
 all (id) [True, True]
@@ -225,6 +230,9 @@ not (hasLongLines "elso\nmasodik\nharmadik")
 hasLongLines "elso\negy nagy alma\nharmadik"
 -}
 
+hasLongLines :: String -> Bool
+hasLongLines str = any (\line -> length (words line) >= 3) $ lines str
+
 {-
     Definiáld a hasAny függvényt, mely megvizsgálja, hogy egy lista
     elemei közül valamelyik előfordul-e egy másik listában!
@@ -235,33 +243,43 @@ hasAny [5,9] [4, 3, 2, 0, 9]
 not (hasAny ["haskell", "python"] ["c", "java"])
 -}
 
+hasAny :: Eq a => [a] -> [a] -> Bool
+hasAny a b = (intersect a b) /= []
 
 --------------------------------------------------------------------------------
 
 
 takeWhile :: (a -> Bool) -> [a] -> [a]
-takeWhile = undefined
+takeWhile _ [] = []
+takeWhile f (x:xs)
+ | f x       = x : takeWhile f xs
+ | otherwise = []
 {-
 takeWhile (\n -> n > 5) [] == []
 takeWhile (\n -> n > 5) [6,7,9,5,2,1] == [6,7,9]
 takeWhile odd [6,7,9,5,2,1] == []
-takeWhile isUpper "ALMAAfa" == "fa"
+takeWhile isUpper "ALMAAfa" == "ALMAA"
 -}
 
 dropWhile :: (a -> Bool) -> [a] -> [a]
-dropWhile = undefined
+dropWhile _ [] = []
+dropWhile f ls@(x:xs)
+    | f x       = dropWhile f xs
+    | otherwise = ls
+
 {-
 dropWhile (\n -> n > 5) [] == []
 dropWhile (\n -> n > 5) [6,7,9,5,2,1] == [5,2,1]
 dropWhile odd [6,7,9,5,2,1] == [6,7,9,5,2,1]
 dropWhile odd [7,9,5,2,1] == [2,1]
-dropWhile isUpper "ALMAAfa" == "ALMAA"
+dropWhile isUpper "ALMAAfa" == "fa"
 -}
 
 {-
     Definiálj egy dropWord nevű függvényt, mely eldobja az első
     szót egy szöveg elejéről!
 -}
+dropWord = dropWhile (/= ' ')
 {-
 dropWord "" == ""
 dropWord " fa" == " fa"
@@ -270,21 +288,23 @@ dropWord "almafa" == ""
 -}
 
 span :: (a -> Bool) -> [a] -> ([a], [a])
-span = undefined
+span f s = (takeWhile f s, dropWhile f s)
 {-
 span isUpper "ALMAAfa" == ("ALMAA", "fa")
 span (< 3) [1,2,3,4] == ([1,2],[3,4])
 -}
 
 break :: (a -> Bool) -> [a] -> ([a], [a])
-break = undefined
+break f = span (not . f)
 {-
 break (not . isUpper) "ALMAAfa" == ("ALMAA", "fa")
 break (> 3) [1,2,3,4] == ([1,2,3],[4])
 -}
 
 zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
-zipWith = undefined
+zipWith f (x:xs) (y:ys) = x `f` y : zipWith f xs ys
+zipWith _ _ _ = []
+
 {-
 zipWith min [1,9,2,5] [5,0,3,8] == [1,0,2,5]
 zipWith min [1,0,3] [5,2,10,1] == [1,0,3]
@@ -297,11 +317,12 @@ zipWith (*) [2,0,6] [1,5,4,9] == [2,0,24]
 -- https://wiki.haskell.org/Pointfree
 
 
-foldr :: Foldable t => (a -> b -> b) -> b -> t a -> b
-foldr = undefined
+foldr :: (a -> b -> b) -> b -> [a] -> b
+foldr f b [] = b
+foldr f b (x:xs) = f x (foldr f b xs)
 {-
-foldl (+) 0 [1..10] == sum [1..10]
-foldl (\a _ -> a + 1) 0 [1,2,3,0,1,23] == length [1,2,3,0,1,23]
+foldr (+) 0 [1..10] == sum [1..10]
+foldr (\_ a -> a + 1) 0 [1,2,3,0,1,23] == length [1,2,3,0,1,23]
 -}
 
 

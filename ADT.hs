@@ -1,44 +1,55 @@
 module ADT where
 
---import RandomStudentGenerator
+import RandomStudentGenerator
 
 -- data Bool = True | False
 data Logikai = Igaz | Hamis
   deriving (Eq, Show)
 
--- Ne használjátok, teszteléshez kell
-b2l True = Igaz
-b2l False = Hamis
+not' :: Bool -> Bool
+not' True = False
+not' False = True
 
 -- not
 nem :: Logikai -> Logikai
-nem = undefined
+nem Igaz = Hamis
+nem Hamis = Igaz
 
--- otherwise
+-- otherwise = True
 máskülönben :: Logikai
-máskülönben = undefined
+máskülönben = Igaz
 
 -- (&&)
 és :: Logikai -> Logikai -> Logikai
-infixr 3 `és`
-és = undefined
+és Igaz Igaz = Igaz
+és _ _ = Hamis
 
 -- (||)
 vagy :: Logikai -> Logikai -> Logikai
-infixr 2 `vagy`
-vagy = undefined
+vagy Hamis Hamis = Hamis
+vagy _ _ = Igaz
+
+-- (==)
+egyenlő :: Eq a => a -> a -> Logikai
+egyenlő a b = if a == b then Igaz else Hamis
 
 -- and
 listaÉs :: [Logikai] -> Logikai
-listaÉs = undefined
+listaÉs [] = Igaz
+listaÉs (Igaz:at) = listaÉs at
+listaÉs _ = Hamis
 
 -- any
-bármelyik :: (a -> Logikai) -> [a] -> Bool
-bármelyik = undefined
+bármelyik :: (a -> Logikai) -> [a] -> Logikai
+bármelyik _ [] = Hamis
+bármelyik f (x:xs) = f x `vagy` bármelyik f xs
 
 -- takeWhile
 veddElAmíg :: (a -> Logikai) -> [a] -> [a]
-veddElAmíg = undefined
+veddElAmíg _ [] = []
+veddElAmíg f (x:xs)
+ |f x==Igaz = x:veddElAmíg f xs 
+ |otherwise = []
 
 --------------------------------------------------------------------------------
 
