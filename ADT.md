@@ -76,8 +76,8 @@ http://learnyouahaskell.com/making-our-own-types-and-typeclasses#type-parameters
 
 ### Tipikus vizsga feladatokkal `Maybe`-vel:
 - biztonságos-
-	-- függvények listákkal, (head, tail, max...)
-	-- műveletek, (0/0, 0^0, Mátrix/Vektor műveletek...)
+	- függvények listákkal, (head, tail, max...)
+	- műveletek, (0/0, 0^0, Mátrix/Vektor műveletek...)
 - erőltetett feladatok (valamilyen fv, és a végeredményt csomagold be egy `Just`-ba, ha ...)
 - Néha nehezebb témakörökből lopott feladatok elmagyarázva (`fmap`, `>==`...)
 
@@ -129,7 +129,7 @@ natApply (*) (-5) 5 == Nothing
 ```
 
 3. Adjuk meg a `safeLength` függvényt, ami kap egy listát és egy maximum korlátot. Hogy ha a lista hossza a korlát alatt van, akkor adjuk vissza a hosszát Just-al. Hogy ha a lista hossza túllépné a korlátot akkor Nothing-al térjen vissza! Fontos, hogy a függvény működjön végtelen listákra is!
-```
+```haskell
 safeLength :: Int -> [a] -> Maybe Int
 
 safeLength 0 [] == Just 0
@@ -162,8 +162,9 @@ data Orientation =
 ```
 ---
 ### Órás feladat
--- http://learnyouahaskell.com/types-and-typeclasses#typeclasses-101
--- https://en.wikipedia.org/wiki/12-hour_clock
+http://learnyouahaskell.com/types-and-typeclasses#typeclasses-101
+http://learnyouahaskell.com/making-our-own-types-and-typeclasses#typeclasses-102
+https://en.wikipedia.org/wiki/12-hour_clock
 
 Definiálj egy USTime ADT-t, melyenk két típuskonstruktora legyen:
 - `AM :: Int -> Int -> USTime`
