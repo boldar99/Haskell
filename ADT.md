@@ -55,7 +55,6 @@ listaÉs [Igaz, Hamis] == Hamis
 bármelyik :: (a -> Logikai) -> [a] -> Bool
 -- Tesztek:
 bármelyik (\l -> l `egyenlő` []) [[1..10], [1..20], []]
-not (bármelyik (const Igaz) [])
 
 -- takeWhile
 veddElAmíg :: (a -> Logikai) -> [a] -> [a]
