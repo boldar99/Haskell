@@ -76,8 +76,8 @@ http://learnyouahaskell.com/making-our-own-types-and-typeclasses#type-parameters
 
 ### Tipikus vizsga feladatokkal `Maybe`-vel:
 - biztonságos-
-	-- függvények listákkal, (head, tail, max...)
-	-- műveletek, (0/0, 0^0, Mátrix/Vektor műveletek...)
+	- függvények listákkal, (head, tail, max...)
+	- műveletek, (0/0, 0^0, Mátrix/Vektor műveletek...)
 - erőltetett feladatok (valamilyen fv, és a végeredményt csomagold be egy `Just`-ba, ha ...)
 - Néha nehezebb témakörökből lopott feladatok elmagyarázva (`fmap`, `>==`...)
 
