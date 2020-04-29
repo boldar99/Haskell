@@ -129,7 +129,7 @@ natApply (*) (-5) 5 == Nothing
 ```
 
 3. Adjuk meg a `safeLength` függvényt, ami kap egy listát és egy maximum korlátot. Hogy ha a lista hossza a korlát alatt van, akkor adjuk vissza a hosszát Just-al. Hogy ha a lista hossza túllépné a korlátot akkor Nothing-al térjen vissza! Fontos, hogy a függvény működjön végtelen listákra is!
-```
+```haskell
 safeLength :: Int -> [a] -> Maybe Int
 
 safeLength 0 [] == Just 0
