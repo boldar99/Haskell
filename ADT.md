@@ -162,8 +162,9 @@ data Orientation =
 ```
 ---
 ### Órás feladat
--- http://learnyouahaskell.com/types-and-typeclasses#typeclasses-101
--- https://en.wikipedia.org/wiki/12-hour_clock
+http://learnyouahaskell.com/types-and-typeclasses#typeclasses-101
+http://learnyouahaskell.com/making-our-own-types-and-typeclasses#typeclasses-102
+https://en.wikipedia.org/wiki/12-hour_clock
 
 Definiálj egy USTime ADT-t, melyenk két típuskonstruktora legyen:
 - `AM :: Int -> Int -> USTime`
