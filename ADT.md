@@ -24,7 +24,6 @@ máskülönben == Igaz
 
 -- (&&)
 és :: Logikai -> Logikai -> Logikai
-infixr 3 `és`
 -- Tesztek:
 Igaz `és` Igaz == Igaz
 Igaz `és` Hamis == Hamis
@@ -33,7 +32,6 @@ Hamis `és` Hamis == Hamis
 
 -- (||)
 vagy :: Logikai -> Logikai -> Logikai
-infixr 2 `vagy`
 -- Tesztek:
 Igaz `vagy` Igaz == Igaz
 Igaz `vagy` Hamis == Igaz
@@ -42,7 +40,6 @@ Hamis `vagy` Hamis == Hamis
 
 -- (==)
 egyenlő :: Eq a => a -> a -> Logikai
-infix 4 `egyenlő`
 -- Tesztek:
 egyenlő 'c' 'd' == Hamis
 egyenlő 1 1 == Igaz
@@ -77,7 +74,7 @@ http://learnyouahaskell.com/making-our-own-types-and-typeclasses#type-parameters
 ### Tipikus vizsga feladatokkal `Maybe`-vel:
 - biztonságos-
 	- függvények listákkal, (head, tail, max...)
-	- műveletek, (0/0, 0^0, Mátrix/Vektor műveletek...)
+	- műveletek, (0/0, Mátrix/Vektor műveletek...)
 - erőltetett feladatok (valamilyen fv, és a végeredményt csomagold be egy `Just`-ba, ha ...)
 - Néha nehezebb témakörökből lopott feladatok elmagyarázva (`fmap`, `>==`...)
 
