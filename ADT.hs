@@ -51,28 +51,77 @@ veddElAmíg f (x:xs)
  |f x==Igaz = x:veddElAmíg f xs 
  |otherwise = []
 
+truthTable :: [(Logikai -> Logikai -> Logikai)] -> [[Logikai]]
+truthTable fs = p : q : [zipWith f p q | f <- fs]
+ where
+   p = [Igaz,Igaz,Hamis,Hamis]
+   q = [Igaz,Hamis,Igaz,Hamis]
+
 --------------------------------------------------------------------------------
 
 -- data Maybe a = Just a | Nothing
-data Talán a = Csak a | Semmmi
+data Talán a = Csak a | Semmi
   deriving (Eq, Show)
 
 -- lookup
 kikeres :: Eq a => a -> [(a, b)] -> Talán b
-kikeres = undefined
+kikeres _ [] = Semmi
+kikeres k ((key,value):xs)
+ | k == key  = Csak value
+ | otherwise = kikeres k xs
 
 -- find
 keres :: (a -> Logikai) -> [a] -> Talán a
-keres = undefined
+keres _ [] = Semmi
+keres pred (x:xs)
+ | pred x == Igaz = Csak x
+ | otherwise      = keres pred xs
 
 --------------------------------------------------------------------------------
 
-data USTime = Undefined
+maybeSqrt :: (Ord a, Floating a) => a -> Maybe a
+maybeSqrt a 
+  | a >= 0    = Just $ sqrt a
+  | otherwise = Nothing
+
+natApply :: (Int -> Int -> Int) -> Int -> Int -> Maybe Int
+natApply f a b
+ | f a b < 0 = Nothing
+ | otherwise = Just (f a b)
+
+len [] = 0
+len (_:xs) = 1 + len xs
+
+safeLength :: Int -> [a] -> Maybe Int
+safeLength _ [] = Just 0
+safeLength 0 _ = Nothing
+safeLength a (x:xs) = maybeAdd 1 (safeLength (a-1) xs)
+-- safeLength a (x:xs) = fmap (+1) (safeLength (a-1) xs)
+
+maybeAdd :: Int -> Maybe Int -> Maybe Int
+maybeAdd n (Just m) = Just $ n + m 
+maybeAdd _ Nothing  = Nothing
+
+--------------------------------------------------------------------------------
+
+data USTime = AM Int Int | PM Int Int
+  deriving (Eq)
 
 instance Show USTime where
- show t = undefined
+ show (AM h m) = format h m ++ " a.m."
+ show (PM h m) = format h m ++ " p.m."
 
+format h m = doubleDigit h ++ ':' : doubleDigit m
 
+doubleDigit n
+ | n < 10  = '0' : show n
+ | n >= 10 = show n
+
+instance Ord USTime where
+  compare (AM _ _) (PM _ _) = LT
+  compare (PM _ _) (AM _ _) = GT
+  compare (AM h1 m1) (AM h2 m2) = compare (h1, m1) (h2, m2)
+  compare (PM h1 m1) (PM h2 m2) = compare (h1, m1) (h2, m2)
 
 isValid :: USTime -> Bool
 isValid t = undefined
@@ -84,7 +133,7 @@ earliest :: [USTime] -> USTime
 earliest = undefined
 
 
-{-
+
 -- Akkor fog átmenni az összes teszten, ha a test változó True lesz
 test :: Bool
 test = and [showTest, compareTest, isValidTest, addTest, earliestTest]
@@ -101,4 +150,3 @@ addTest      = and [add (AM 5 0) (AM 5 0) == (AM 10 0), add (AM 12 59) (AM 0 1) 
                     add (PM 1 0) (PM 1 0) == (AM 2 0)]
 earliestTest = and [earliest [AM 5 0, AM 5 0, AM 10 0] == AM 5 0, 
                     earliest [PM h m | h <- [1..12], m <- [0..59]] == PM 1 0]
--}
