@@ -79,7 +79,7 @@ http://learnyouahaskell.com/making-our-own-types-and-typeclasses#type-parameters
 
 ```Haskell
 -- data Maybe a = Just a | Nothing
-data Talán a = Csak a | Semmmi
+data Talán a = Csak a | Semmi
   deriving (Eq, Show)
 
 -- lookup
