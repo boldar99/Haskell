@@ -145,8 +145,7 @@ compareTest  = and [compare (AM 12 12) (AM 12 12) == EQ, compare (AM 12 10) (AM 
                     compare (PM 10 0) (AM 10 0) == GT]
 isValidTest  = and [isValid (AM 10 12), isValid (AM 12 59), not $ isValid (AM 13 00), 
                     not $ isValid (PM 00 00), not $ isValid (PM 04 60)]
-addTest      = and [add (AM 5 0) (AM 5 0) == (AM 10 0), add (AM 12 59) (AM 0 1) == (PM 1 0), 
-                    add (AM 5 0) (PM 1 0) == (PM 6 0), add (PM 1 0) (AM 1 0) == (PM 2 0), 
-                    add (PM 1 0) (PM 1 0) == (AM 2 0)]
+addTest      = and [add (AM 5 0) (AM 5 0) == (AM 10 0), add (AM 5 0) (PM 1 0) == (PM 6 0), 
+                    add (PM 1 0) (AM 1 0) == (PM 02 0), add (PM 1 0) (PM 1 0) == (AM 2 0)]
 earliestTest = and [earliest [AM 5 0, AM 5 0, AM 10 0] == AM 5 0, 
                     earliest [PM h m | h <- [1..12], m <- [0..59]] == PM 1 0]

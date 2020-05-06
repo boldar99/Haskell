@@ -202,10 +202,14 @@ not $ isValid (PM 04 60)
 ```
 
 4. Készítsük el az `add` függvényt, mely összead két USTime-t 
-Túlcsordulás esetén újra kezdődik AM 01 00-tól
+Túlcsordulás esetén újra kezdődik éjféltól
 ```Haskell
 add :: USTime -> USTime -> USTime
 -- Tesztesetek
+add (AM 5 0) (AM 5 0) == (AM 10 0)
+add (AM 5 0) (PM 1 0) == (PM 6 0)
+add (PM 1 0) (AM 1 0) == (PM 2 0)
+add (PM 1 0) (PM 1 0) == (AM 2 0)
 ```
 
 5.  Írjuk meg az `earliest` függvényt, mely egy listából kiválasztja a legkorábbi időpont. 
