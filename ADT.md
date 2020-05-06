@@ -85,7 +85,7 @@ data Talán a = Csak a | Semmmi
 -- lookup
 kikeres :: Eq a => a -> [(a, b)] -> Talán b
 -- Tesztek:
-kikeres 3 [(1, "alma"), (2, "cica"), (3, "róka")] == Csak "cica"
+kikeres 3 [(1, "alma"), (2, "cica"), (3, "roka")] == Csak "roka"
 kikeres 4 [(1, "alma"), (2, "cica")] == Semmi
 kikeres 5 [] == Semmi
 
