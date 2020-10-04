@@ -13,7 +13,7 @@ randomStudent = atRandIndex students
     where
         students = 
             [
-                "Andor Gergely",			
+                "Andor Gergely",
                 "Arany Barnabás",
                 "Balázs Zoltán",
                 "Deák Dániel",
