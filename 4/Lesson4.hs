@@ -1,5 +1,7 @@
 module Lesson4 where
 
+import Data.Char (toUpper)
+
 -- infrastruktúra
 --------------------------------------------------------------------------------
 -- ghci parancsok, ghc, holes
@@ -10,12 +12,13 @@ module Lesson4 where
 --   :browse            ~ :bro            -- listázza a jelenleg betöltött definíciókat
 --   :type kifejezés    ~ :t kifejezés    -- kifejezés típusa
 --   :info definíciónév ~ :i definíciónév -- "információ" névről  (név: érték definíció, típusnév, osztály, operátor(!))
+--   :quit              ~ :q              -- Kilépés a ghci-ből
 
 -- példa: operátor precedenciáját lekérdezni :i-vel:
 -- > :i (+)
 
 num :: Int
-num = 1000
+num = 1010
 
 
 -- feladatok
@@ -30,30 +33,40 @@ num = 1000
 
 -- Definiáljunk egy függvényt, ami egy számot megnövel 1-el.
 inc :: Int -> Int
-inc = undefined
+inc n = n + 1
 
 
 -- Definiáljuk a faktoriális függvényt a rekurzív formula alapján:
 --   0! = 1
 --   n! = n * (n - 1)!
 factorial :: Integer -> Integer
-factorial = undefined
+factorial 0 = 1
+factorial n = n * factorial (n - 1)
 
 
 -- 0-tól 5-ig visszaadja a számot betűkkel leírva. Máskülönben vlmi szöveget.
 sayMe :: Int -> String
-sayMe = undefined
+sayMe 0 = "null"
+sayMe 1 = "one"
+sayMe 2 = "two"
+sayMe 3 = "three"
+sayMe 4 = "four"
+sayMe 5 = "five"
+sayMe _ = "Sorry, this number is not between 0 and 5"
 
 
 -- Definiáljunk a függvényt, ami néhány karakterhez visszaadja a kódszavát.
 -- https://en.wikipedia.org/wiki/NATO_phonetic_alphabet
 charName :: Char -> String
-charName = undefined
+charName 'a' = "Alfa"
+charName 'w' = "Whiskey"
+charName  _  = "Sorry, I don't know..."
 
 
 -- Definiáljuk a tagadás függvényt, ami a logikai értékek ellentétét adja vissza.
 not' :: Bool -> Bool
-not' = undefined
+not' True = False
+not' False = True
 
 
 ----------------------
@@ -73,27 +86,30 @@ not' = undefined
 
 -- Egy tuple két elemének megcserélése.
 swap :: (a, b) -> (b, a)
-swap = undefined
+swap (a,b) = (b,a)
 
 
 -- Definiáljuk a három hosszú tuple-ra az alábbi függvényeket. (első, második, harmadik komponense a tuple-nek)
 -- Az alsóbb függvényekhez adjunk típusdeklarációt is.
 fst3 :: (a, b, c) -> a
-fst3 = undefined
+fst3 (a,_,_) = a
 
-snd3 = undefined
+snd3 :: (a, b, c) -> b
+snd3 (_,b,_) = b
 
-trd3 = undefined
+trd3 :: (a, b, c) -> c
+trd3 (_,_,c) = c
 
 
 -- Tükrözzünk egy pontot az x tengelyre!
 mirrorX :: Floating t => (t, t) -> (t, t)
-mirrorX = undefined
+mirrorX (x,y) = (x,-y)
 
 
 -- Számoljuk ki két pont távolságát!
 -- Írjunk típusdeklarációt is!
-distance = undefined
+distance :: Floating t => (t, t) -> (t, t) -> t
+distance (a,b) (c,d) = sqrt ((a-c)^2 + (b-d)^2)
 
 
 
@@ -104,23 +120,26 @@ distance = undefined
 
 -- Döntsük el, hogy egy lista üres-e?
 null' :: [a] -> Bool
-null' = undefined
+null' [] = True
+null' _  = False
 
 
 -- Döntsük el, hogy egy lista egyelemű-e?
 -- Írjunk típusdeklarációt is!
-isSingleton = undefined
+isSingleton :: [a] -> Bool
+isSingleton [_] = True
+isSingleton  _  = False
 
 
 -- Adjuk vissza egy lista első elemét!
 head' :: [a] -> a
-head' = undefined
+head' (x:_) = x
 
 
 -- Egy tetszőleges szót alakítsunk át úgy, hogy nagybetűvel kezdődjön!
 -- A megoldásban használjuk a Data.Char modul toUpper függvényét!
 toUpperFirst :: String -> String
-toUpperFirst = undefined
+toUpperFirst (x:xs) = toUpper x : xs
 
 
 -- Egy tetszőleges szöveg minden szavát alakítsuk át nagybetűvel kezdődőre! 
@@ -130,9 +149,11 @@ toUpperFirsts = undefined
 
 
 -- Írjunk infókat 0, 1, 2 és 2+ hosszú listákról. Írjuk ki a szövegbe - ha lehetséges - az első két elemét a listának, és hogy milyen hosszú.
-tell :: (Show a) => [a] -> String  
-tell = undefined
-
+tell :: [Int] -> String  
+tell [] = "This list is empty"
+tell [x] = "This list has one element: " ++ show x
+tell [x,y] = "This list has two elements: " ++ show x ++ ", " ++ show y
+tell (x1:x2:_) = "This list is too long. Its first two elemnts are: " ++ show x1 ++ ", " ++ show x2
 
 -- [nehéz] Adjuk meg milyen hosszú egy lista!
 length' :: (Num b) => [a] -> b  
@@ -186,6 +207,8 @@ abs' = undefined
 bmiTell :: (RealFloat a) => a -> String  
 bmiTell = undefined
 
+
+add = (>>=)
 
 -- Írjuk át az előbbi függvényt úgy, hogy mi számoljuk ki a bmi-t (weight / height ^ 2).
 
