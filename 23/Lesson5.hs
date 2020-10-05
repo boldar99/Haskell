@@ -1,6 +1,7 @@
-module Lesson4 where
+module Lesson5 where
 
 import Data.Char (toUpper)
+import Data.List (sort)
 
 
 
@@ -39,13 +40,15 @@ toUpperFirst (x:xs) = toUpper x : xs
 
 -- Egy tetszőleges szöveg minden szavát alakítsuk át nagybetűvel kezdődőre! 
 -- A megoldásban használjuk a words és az unwords függvényeket!
-toUpperFirsts :: String -> String
-toUpperFirsts = undefined
+-- toUpperFirsts :: String -> String
+toUpperFirsts sentence = unwords [toUpperFirst w | w <- words sentence]
+-- lines, unlines ~ sorokra
 
 
 -- [nehéz] Adjuk meg milyen hosszú egy lista!
 length' :: (Num b) => [a] -> b  
-length' = undefined
+length' []     = 0
+length' (_:xs) = 1 + length' xs
 -- Tipp: Egy üres lista hossza 0, és egy lista tail-jének a hossza egyel kisebb, mint az eredeti lista hossza.
 
 
@@ -58,7 +61,7 @@ length' = undefined
 --  goo [(1, 2), (3, 4), (5, 6)] == 10
 --  goo [(0, 10), (-10, 0), (9999, 1)] == 0
 goo :: [(Int, Int)] -> Int
-goo = undefined
+goo ((x1,x2):(y1,y2):_) = x1 + x2 + y2 + y1
 
 
 
@@ -72,7 +75,7 @@ goo = undefined
 -- Példa: 
 --  capital "CAT" == "The first letter of CAT is C"
 capital :: String -> String
-capital = undefined
+capital str@(x:_) = "The first letter of " ++ str ++ " is " ++ [x]
 
 
 
@@ -82,16 +85,30 @@ capital = undefined
 
 
 -- Adjuk meg egy szám abszolútértékét!
-abs' :: Num a => a -> a
-abs' = undefined
+abs' :: (Num a, Ord a) => a -> a
+abs' n
+    | n < 0  = -n
+    | n >= 0 = n
 
 
 -- Mondjunk dolgokat bmi alapján (18.5, 25.0, 30.0)!
-bmiTell :: (RealFloat a) => a -> String  
-bmiTell = undefined
+-- bmiTell :: (RealFloat a) => a -> String  
+-- bmiTell bmi
+--     | bmi < 18.5 = "Sovány vagy!"
+--     | bmi < 25.0 = "Normális testsúlyod van!"
+--     | bmi < 30.0 = "Enyhén túlsúlyos vagy!"
+--     | otherwise  = "Túlsúlyos vagy!"
 
 
 -- Írjuk át az előbbi függvényt úgy, hogy mi számoljuk ki a bmi-t (weight / height ^ 2).
+{-
+bmiTell :: (RealFloat a) => a -> a -> String  
+bmiTell weight height
+    | (weight / height ^ 2) < 18.5 = "Sovány vagy!"
+    | (weight / height ^ 2) < 25.0 = "Normális testsúlyod van!"
+    | (weight / height ^ 2) < 30.0 = "Enyhén túlsúlyos vagy!"
+    | otherwise                    = "Túlsúlyos vagy!"
+-}
 
 
 
@@ -101,6 +118,17 @@ bmiTell = undefined
 
 
 -- Írjuk át az előbbi függvényt úgy, hogy where-t használunk.
+bmiTell :: (RealFloat a) => a -> a -> String  
+bmiTell weight height
+    | bmi < thinBmi       = "Sovány vagy!"
+    | bmi < normalBmi     = "Normális testsúlyod van!"
+    | bmi < overWeightBmi = "Enyhén túlsúlyos vagy!"
+    | otherwise           = "Túlsúlyos vagy!"
+    where
+        bmi           = weight / height ^ 2
+        thinBmi       = 18.5
+        normalBmi     = 25
+        overWeightBmi = 30
 
 
 -- Nézzük át az eddig definiált függvényeinket, és ahol érdemes, írjuk át where-el.
@@ -111,17 +139,17 @@ bmiTell = undefined
 -- Mintaillesztés lista generátorban --
 ---------------------------------------
 -- Minták halmazkifejezésekben is alkalmazhatóak. Erre egy intuitív példa:
--- [x | (x,1)<- [('c',2),('d',1),('e',1)]] == "de"
+-- [x | (x,1) <- [('c',2),('d',1),('e',1)]] == "de"
 
 
 -- Számoljuk meg, hogy egy Bool-ok listájában hány True van!
 countTrue :: [Bool] -> Int
-countTrue = undefined
+countTrue ls = length [True | True <- ls]
 
 
 -- [nehéz] Vegyük egy lista minden 5. elemét!
-everyFifth :: [a] -> [a]
-everyFifth = undefined
+-- everyFifth :: [a] -> [a]
+everyFifth ls = [a | (a, 1) <- zip ls [i `mod` 5| i <- [1..]]]
 -- Használhatjuk a zip függvényt.
 
 
@@ -148,7 +176,8 @@ everyFifth = undefined
 area 6 10 == 60
 -}
 area :: Int -> Int -> Int
-area = undefined
+area h w = h * w
+-- area = (*)
 
 
 -- Definiálj egy függvényt, mely megvizsgálja, hogy egy egész szám oszt-e egy másikat?
@@ -156,8 +185,8 @@ area = undefined
 divides 2 4
 not (divides 4 2)
 -}
-divides :: Int -> Int -> Int
-divides = undefined
+divides :: Int -> Int -> Bool
+divides a b = b `mod` a == 0
 
 
 -- Definiálj egy függvényt, mely megmondja három egész számról, hogy azok pitagoraszi számhármasok-e?
@@ -166,12 +195,22 @@ pythagoreanTriple 3 4 5
 pythagoreanTriple 5 3 4
 not (pythagoreanTriple 2 3 4)
 -}
-pythagoreanTriple :: Int -> Int -> Int -> Int
-pythagoreanTriple = undefined
+
+pythagoreanTriple :: Int -> Int -> Int -> Bool
+pythagoreanTriple x y z = a^2 + b^2 == c^2
+    where
+        [a,b,c] = sort [x, y, z]
 
 
 -- Hogyan zárójelezi a Haskell az alábbi kifejezést?
 -- 1 + 1 + 1 * 2 ^ 3 ^ 4 == 10 || 4 > 2 || False && True && False
+
+-- 1 + 1 + 1 * (2 ^ (3 ^ 4)) == 10 || 4 > 2 || False && True && False
+-- 1 + 1 + (1 * (2 ^ (3 ^ 4))) == 10 || 4 > 2 || False && True && False
+-- ((1 + 1) + (1 * (2 ^ (3 ^ 4)))) == 10 || 4 > 2 || False && True && False
+-- (((1 + 1) + (1 * (2 ^ (3 ^ 4)))) == 10) || (4 > 2) || False && True && False
+-- (((1 + 1) + (1 * (2 ^ (3 ^ 4)))) == 10) || (4 > 2) || (False && (True && False))
+-- ((((1 + 1) + (1 * (2 ^ (3 ^ 4)))) == 10) || ((4 > 2) || (False && (True && False))))
 
 
 -- Adjuk meg a 100001. elemét annak a számtani sorozatnak, amelynek az első két eleme 13 és 44!
@@ -387,4 +426,3 @@ gcd' 14 77 == 7
 -}
 gcd' :: Int -> Int -> Int
 gcd' = undefined
-
