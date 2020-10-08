@@ -1,4 +1,4 @@
-module Lesson4 where
+module Lesson5 where
 
 import Data.Char (toUpper)
 
@@ -8,6 +8,8 @@ import Data.Char (toUpper)
 -- Ismétlés --
 --------------
 
+
+foo x = undefined
 
 -- Definiáljunk a függvényt, ami néhány karakterhez visszaadja a kódszavát.
 -- https://en.wikipedia.org/wiki/NATO_phonetic_alphabet
@@ -40,13 +42,17 @@ toUpperFirst (x:xs) = toUpper x : xs
 -- Egy tetszőleges szöveg minden szavát alakítsuk át nagybetűvel kezdődőre! 
 -- A megoldásban használjuk a words és az unwords függvényeket!
 toUpperFirsts :: String -> String
-toUpperFirsts = undefined
+-- toUpperFirsts str = unwords [toUpperFirst ((words str) !! i) | i <- [0..length (words str)-1]]
+toUpperFirsts str = unwords [toUpperFirst w | w <- words str]
 
 
 -- [nehéz] Adjuk meg milyen hosszú egy lista!
 length' :: (Num b) => [a] -> b  
-length' = undefined
+length' []     = 0
+length' (_:xs) = 1 + length' xs
 -- Tipp: Egy üres lista hossza 0, és egy lista tail-jének a hossza egyel kisebb, mint az eredeti lista hossza.
+
+
 
 
 -----------------------
@@ -57,8 +63,15 @@ length' = undefined
 --  goo [(1, 1), (1, 1)] == 4
 --  goo [(1, 2), (3, 4), (5, 6)] == 10
 --  goo [(0, 10), (-10, 0), (9999, 1)] == 0
+
+
 goo :: [(Int, Int)] -> Int
-goo = undefined
+goo ((a,b):(c,d):_) = a+b+c+d
+-- goo t = sum [a + b | (a,b) <- take 2 t]
+goo t = f list2
+    where
+        list2 = take 2 t
+        f [(a,b),(c,d)] = a+b+c+d
 
 
 
@@ -72,7 +85,7 @@ goo = undefined
 -- Példa: 
 --  capital "CAT" == "The first letter of CAT is C"
 capital :: String -> String
-capital = undefined
+capital str@(c:_) = "The first letter of " ++ str ++ " is " ++ [c]
 
 
 
@@ -82,22 +95,51 @@ capital = undefined
 
 
 -- Adjuk meg egy szám abszolútértékét!
-abs' :: Num a => a -> a
-abs' = undefined
+abs' :: (Real a) => a -> a
+abs' n
+    | n <  0 = -n
+    | n >= 0 = n
 
 
 -- Mondjunk dolgokat bmi alapján (18.5, 25.0, 30.0)!
+{-
 bmiTell :: (RealFloat a) => a -> String  
-bmiTell = undefined
+bmiTell bmi
+    | bmi < 18.5 = "You are skinny"
+    | bmi < 25.0 = "Your weight seems to be normal"
+    | bmi < 30.0 = "You have a lil extra"
+    | otherwise  = "You are overweight"
+-}
 
 
 -- Írjuk át az előbbi függvényt úgy, hogy mi számoljuk ki a bmi-t (weight / height ^ 2).
+
+
+-- bmiTell :: (RealFloat a) => a -> a -> String  
+-- bmiTell weight height
+--     | weight / height ^ 2 < 18.5 = "You are skinny"
+--     | weight / height ^ 2 < 25.0 = "Your weight seems to be normal"
+--     | weight / height ^ 2 < 30.0 = "You have a lil extra"
+--     | otherwise                  = "You are overweight"
 
 
 
 -----------
 -- where --
 -----------
+
+
+bmiTell :: (RealFloat a) => a -> a -> String  
+bmiTell weight height
+    | bmi < skinnyWeight  = "You are skinny" 
+    | bmi < normalWeight  = "Your weight seems to be normal"
+    | bmi < lilOverWeight = "You have a lil extra"
+    | otherwise           = "You are overweight"
+    where
+        bmi = weight / height ^ 2
+        skinnyWeight = 18.5
+        normalWeight = 25
+        lilOverWeight = 30
 
 
 -- Írjuk át az előbbi függvényt úgy, hogy where-t használunk.
@@ -111,19 +153,28 @@ bmiTell = undefined
 -- Mintaillesztés lista generátorban --
 ---------------------------------------
 -- Minták halmazkifejezésekben is alkalmazhatóak. Erre egy intuitív példa:
--- [x | (x,1)<- [('c',2),('d',1),('e',1)]] == "de"
+-- [x | (x,1) <- [('c',2),('d',1),('e',1)]] == "de"
 
 
 -- Számoljuk meg, hogy egy Bool-ok listájában hány True van!
 countTrue :: [Bool] -> Int
-countTrue = undefined
+countTrue ls = length [True | True <- ls]
 
 
 -- [nehéz] Vegyük egy lista minden 5. elemét!
 everyFifth :: [a] -> [a]
-everyFifth = undefined
+everyFifth ls = [x | (0,x) <- zip [i `mod` 5 | i <- [0..]] ls]
+-- everyFifth ls = [x | (i,x) <- zip [0..] ls, i `mod` 5 == 0]
 -- Használhatjuk a zip függvényt.
 
+
+safeDiv :: Int -> Int -> Maybe Int
+safeDiv 0 0 = Nothing
+safeDiv a b = Just (a `div` b)
+
+
+getJusts :: [Maybe a] -> [a]
+getJusts ls = [x | Just x <- ls]
 
 
 --------------------------------------------
@@ -148,7 +199,8 @@ everyFifth = undefined
 area 6 10 == 60
 -}
 area :: Int -> Int -> Int
-area = undefined
+area h w = h * w
+-- area = (*)
 
 
 -- Definiálj egy függvényt, mely megvizsgálja, hogy egy egész szám oszt-e egy másikat?
@@ -156,7 +208,7 @@ area = undefined
 divides 2 4
 not (divides 4 2)
 -}
-divides :: Int -> Int -> Int
+divides :: Int -> Int -> Bool
 divides = undefined
 
 
@@ -166,7 +218,7 @@ pythagoreanTriple 3 4 5
 pythagoreanTriple 5 3 4
 not (pythagoreanTriple 2 3 4)
 -}
-pythagoreanTriple :: Int -> Int -> Int -> Int
+pythagoreanTriple :: Int -> Int -> Int -> Bool
 pythagoreanTriple = undefined
 
 

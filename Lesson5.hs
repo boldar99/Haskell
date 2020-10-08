@@ -1,4 +1,4 @@
-module Lesson4 where
+module Lesson5 where
 
 import Data.Char (toUpper)
 
@@ -82,8 +82,10 @@ capital = undefined
 
 
 -- Adjuk meg egy szám abszolútértékét!
-abs' :: Num a => a -> a
+abs' :: Real a => a -> a
 abs' = undefined
+-- class (Num a, Ord a) => Real a where
+--      ...
 
 
 -- Mondjunk dolgokat bmi alapján (18.5, 25.0, 30.0)!
@@ -94,6 +96,9 @@ bmiTell = undefined
 -- Írjuk át az előbbi függvényt úgy, hogy mi számoljuk ki a bmi-t (weight / height ^ 2).
 
 
+-- bmiTell :: (RealFloat a) => a -> a -> String
+
+
 
 -----------
 -- where --
@@ -101,10 +106,7 @@ bmiTell = undefined
 
 
 -- Írjuk át az előbbi függvényt úgy, hogy where-t használunk.
-
-
--- Nézzük át az eddig definiált függvényeinket, és ahol érdemes, írjuk át where-el.
-
+-- bmiTell :: (RealFloat a) => a -> a -> String
 
 
 ---------------------------------------
@@ -156,7 +158,7 @@ area = undefined
 divides 2 4
 not (divides 4 2)
 -}
-divides :: Int -> Int -> Int
+divides :: Int -> Int -> Bool
 divides = undefined
 
 
@@ -166,7 +168,7 @@ pythagoreanTriple 3 4 5
 pythagoreanTriple 5 3 4
 not (pythagoreanTriple 2 3 4)
 -}
-pythagoreanTriple :: Int -> Int -> Int -> Int
+pythagoreanTriple :: Int -> Int -> Int -> Bool
 pythagoreanTriple = undefined
 
 
