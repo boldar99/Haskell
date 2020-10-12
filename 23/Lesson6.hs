@@ -68,7 +68,7 @@ pythagoreanTriple x y z = a^2 + b^2 == c^2
 sequenceElement == 3100013
 -}
 sequenceElement :: Integer
-sequenceElement = undefined
+sequenceElement = [13,44..] !! 100000
 
 
 -- Soroljuk fel az angol ábécé minden 3. karakterét egy listában
@@ -76,7 +76,7 @@ sequenceElement = undefined
 charters == "adgjmpsvy"
 -}
 charters :: [Char]
-charters = undefined
+charters = ['a','d'..'z']
 
 
 -- Hányféleképpen választhatunk ki n különböző elemből k elemet?
@@ -84,23 +84,26 @@ charters = undefined
 alatt 70 30 == 55347740058143507128
 -}
 alatt :: Integer -> Integer -> Integer
-alatt = undefined
+alatt n k = product [n-k+1.. n] `div` product [1..k] 
 
 
 -- Milyen hosszú a saját nevünk. (A space-ket ne számoljuk)
 {-
-nameLen "Haskell Brooks Curry" == 18
+Ha a nevem "Haskell Brooks Curry"
+nameLen == 18
 -}
 nameLen :: Int
-nameLen = undefined
+nameLen = length myName - length [' ' | ' ' <- myName]
+    where
+        myName = "Haskell Brooks Curry"
 
 
 -- Egy vezeték és egy kereszt névből készítsünk egy teljes nevet (Angolosan)!
 {-
-fullName "Curry" "Haskell" = "Haskell Curry"
+fullName "Curry" "Haskell" == "Haskell Curry"
 -}
 fullName :: String -> String -> String
-fullName = undefined
+fullName first last = last ++ " " ++ first
 
 
 --  Definiálj egy függvényt, mely egy növekvő majd csökkenő számlistát állít elő!
@@ -108,6 +111,8 @@ fullName = undefined
 mountain 3 == [1, 2, 3, 2, 1]
 mountain 5 == [1, 2, 3, 4, 5, 4, 3, 2, 1]
 -}
+mountain :: Int -> [Int]
+mountain n = [1..n] ++ [n-1, n-2..1]
 
 
 
@@ -132,7 +137,7 @@ isLetter 'X'
 not (isLetter '?')
 -}
 isLetter :: Char -> Bool
-isLetter = undefined
+isLetter c = c `elem` ['a'..'z'] ++ ['A'..'Z']
 
 
 -- Definiálj egy függvényt, mely előállítja egy szám osztóit!
@@ -167,7 +172,7 @@ firstN = undefined
 -- Érdemes bevetni az unwords függvényt!
 -- Írjunk típusdeklaríciót is!
 {-
-fullName2 "Curry" ["Haskell", "Brooks"] = "Haskell Brooks Curry"
+fullName2 "Curry" ["Haskell", "Brooks"] == "Haskell Brooks Curry"
 -}
 fullName2 = undefined
 

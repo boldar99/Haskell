@@ -77,7 +77,8 @@ alatt = undefined
 
 -- Milyen hosszú a saját nevünk. (A space-ket ne számoljuk)
 {-
-nameLen "Haskell Brooks Curry" == 18
+Ha a nevem "Haskell Brooks Curry"
+nameLen == 18
 -}
 nameLen :: Int
 nameLen = undefined
@@ -85,7 +86,7 @@ nameLen = undefined
 
 -- Egy vezeték és egy kereszt névből készítsünk egy teljes nevet (Angolosan)!
 {-
-fullName "Curry" "Haskell" = "Haskell Curry"
+fullName "Curry" "Haskell" == "Haskell Curry"
 -}
 fullName :: String -> String -> String
 fullName = undefined
@@ -155,7 +156,7 @@ firstN = undefined
 -- Érdemes bevetni az unwords függvényt!
 -- Írjunk típusdeklaríciót is!
 {-
-fullName2 "Curry" ["Haskell", "Brooks"] = "Haskell Brooks Curry"
+fullName2 "Curry" ["Haskell", "Brooks"] == "Haskell Brooks Curry"
 -}
 fullName2 = undefined
 
