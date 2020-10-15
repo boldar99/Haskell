@@ -1,6 +1,6 @@
 module Lesson6 where
 
-
+import Data.List (sort, group)
 
 --------------------------------------------
 -- Ismétlő feladatok az eddigi anyagokhoz --
@@ -34,7 +34,7 @@ divides 2 4
 not (divides 4 2)
 -}
 divides :: Int -> Int -> Bool
-divides = undefined
+divides n k = k `mod` n == 0
 
 
 -- Definiálj egy függvényt, mely megmondja három egész számról, hogy azok pitagoraszi számhármasok-e?
@@ -44,11 +44,19 @@ pythagoreanTriple 5 3 4
 not (pythagoreanTriple 2 3 4)
 -}
 pythagoreanTriple :: Int -> Int -> Int -> Bool
-pythagoreanTriple = undefined
+pythagoreanTriple a b c = x^2 + y^2 == z^2
+    where
+        [x,y,z] = sort [a,b,c]
 
 
 -- Hogyan zárójelezi a Haskell az alábbi kifejezést?
 -- 1 + 1 + 1 * 2 ^ 3 ^ 4 == 10 || 4 > 2 || False && True && False
+-- 1 + 1 + 1 * (2 ^ (3 ^ 4)) == 10 || 4 > 2 || False && True && False
+-- 1 + 1 + (1 * (2 ^ (3 ^ 4))) == 10 || 4 > 2 || False && True && False
+-- ((1 + 1) + (1 * (2 ^ (3 ^ 4)))) == 10 || 4 > 2 || False && True && False
+-- (((1 + 1) + (1 * (2 ^ (3 ^ 4)))) == 10) || (4 > 2) || False && True && False
+-- (((1 + 1) + (1 * (2 ^ (3 ^ 4)))) == 10) || (4 > 2) || (False && (True && False))
+-- ((((1 + 1) + (1 * (2 ^ (3 ^ 4)))) == 10) || ((4 > 2) || (False && (True && False))))
 
 
 -- Adjuk meg a 100001. elemét annak a számtani sorozatnak, amelynek az első két eleme 13 és 44!
@@ -56,7 +64,14 @@ pythagoreanTriple = undefined
 sequenceElement == 3100013
 -}
 sequenceElement :: Integer
-sequenceElement = undefined
+sequenceElement = [13,44..] !! 100000
+-- sequenceElement = last (take 100001 [13,44..])
+-- sequenceElement = last $ take 100001 [13,44..]
+
+{-
+sequenceElement = [13,44..] !! 10000000               ~ 0.27 secs
+-- sequenceElement = last (take 10000001 [13,44..])   ~ 0.43 secs
+-}
 
 
 -- Soroljuk fel az angol ábécé minden 3. karakterét egy listában
@@ -64,7 +79,7 @@ sequenceElement = undefined
 charters == "adgjmpsvy"
 -}
 charters :: [Char]
-charters = undefined
+charters = ['a','d'..'z']
 
 
 -- Hányféleképpen választhatunk ki n különböző elemből k elemet?
@@ -72,7 +87,9 @@ charters = undefined
 alatt 70 30 == 55347740058143507128
 -}
 alatt :: Integer -> Integer -> Integer
-alatt = undefined
+alatt n k = fact n `div` (fact k * fact (n - k))
+    where
+        fact n = product [1..n]
 
 
 -- Milyen hosszú a saját nevünk. (A space-ket ne számoljuk)
@@ -81,7 +98,7 @@ Ha a nevem "Haskell Brooks Curry"
 nameLen == 18
 -}
 nameLen :: Int
-nameLen = undefined
+nameLen = length "Haskell Brooks Curry" - 2
 
 
 -- Egy vezeték és egy kereszt névből készítsünk egy teljes nevet (Angolosan)!
@@ -89,7 +106,7 @@ nameLen = undefined
 fullName "Curry" "Haskell" == "Haskell Curry"
 -}
 fullName :: String -> String -> String
-fullName = undefined
+fullName last first = first ++ " " ++ last
 
 
 --  Definiálj egy függvényt, mely egy növekvő majd csökkenő számlistát állít elő!
@@ -97,7 +114,8 @@ fullName = undefined
 mountain 3 == [1, 2, 3, 2, 1]
 mountain 5 == [1, 2, 3, 4, 5, 4, 3, 2, 1]
 -}
-
+mountain :: Int -> [Int]
+mountain n = [1 .. n] ++ [n-1, n-2 .. 1]
 
 
 -- 3. Óra
@@ -171,7 +189,7 @@ allPositive []
 not (allPositive [10, 9 ..])
 not (allPositive [100, 98 .. 0])
 -}
-allPositive = undefined
+allPositive szamok = null [x | x <- szamok, x <= 0]
 
 
 -- [nehéz] Adott egy "aaaabccaadeeee" betűsorozat. Tömörítsd össze úgy, hogy az egymást követő betűk tárolása darabszám-betű pár legyen:
