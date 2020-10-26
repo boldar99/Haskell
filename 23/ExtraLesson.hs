@@ -1,5 +1,6 @@
 module ExtraLesson where
 
+import Data.List (group)
 
 -- 3. Óra
 {-
@@ -23,6 +24,7 @@ not (isLetter '?')
 -}
 isLetter :: Char -> Bool
 isLetter c = c `elem` ['a'..'z'] ++ ['A'..'Z']
+-- isLetter = flip elem $ ['a'..'z'] ++ ['A'..'Z']
 
 
 -- Definiálj egy függvényt, mely előállítja egy szám osztóit!
@@ -33,7 +35,7 @@ divisors 16 == [1, 2, 4, 8, 16]
 divisors 3 == [1, 3]
 -}
 divisors :: Int -> [Int]
-divisors = undefined
+divisors n = [i | i <- [1..n], n `mod` i == 0]
 
 
 -- Sorszámozd meg egy String karaktereinek betűit!
@@ -42,7 +44,9 @@ divisors = undefined
 indexString "alma" == [(1,'a'),(2,'l'),(3,'m'),(4,'a')]
 take 8 (indexString "Haskell Brooks Curry") == [(1,'H'),(2,'a'),(3,'s'),(4,'k'),(5,'e'),(6,'l'),(7,'l'),(8,' ')]
 -}
-indexString = undefined
+indexString :: String -> [(Int, Char)]
+indexString str = zip [1..] str
+-- indexString = zip [1..]
 
 
 -- Adjuk meg az első n elemét annak a számtani sorozatnak, amelynek az első két eleme 13 és 44!
@@ -50,7 +54,9 @@ indexString = undefined
 {-
 firstN 5 == [13,44,75,106,137]
 -}
-firstN = undefined
+firstN :: Int -> [Int]
+firstN n = take n [13, 44..]
+-- firstN = flip take [13, 44..]
 
 
 -- Egy vezetéknévből és egy keresztnévek listájából készítsünk egy teljes nevet (Angolosan)!
@@ -59,7 +65,10 @@ firstN = undefined
 {-
 fullName2 "Curry" ["Haskell", "Brooks"] == "Haskell Brooks Curry"
 -}
-fullName2 = undefined
+fullName2 :: String -> [String] -> String
+fullName2 last firsts = unwords firsts ++ " " ++ last
+-- fullName2 last firsts = unwords (firsts ++ [last])
+-- fullName2 last firsts = unwords $ firsts ++ [last]
 
 
 -- Vizsgáld meg, hogy egy lista csak pozitív számokat tartalmaz-e!
@@ -72,7 +81,10 @@ allPositive []
 not (allPositive [10, 9 ..])
 not (allPositive [100, 98 .. 0])
 -}
-allPositive = undefined
+allPositive :: [Int] -> Bool
+allPositive ls = null [x |x <- ls, x <= 0]
+-- allPositive ls = all (>0) ls
+-- allPositive = all (>0)
 
 
 -- [nehéz] Adott egy "aaaabccaadeeee" betűsorozat. Tömörítsd össze úgy, hogy az egymást követő betűk tárolása darabszám-betű pár legyen:
@@ -84,7 +96,10 @@ compress "aaaabccaadeeee" == [(4,'a'), (1,'b'), (2,'c'), (2,'a'), (1,'d'), (4,'e
 compress "oh hello!!" == [(1,'o'),(1,'h'),(1,' '),(1,'h'),(1,'e'),(2,'l'),(1,'o'),(2,'!')]
 compress "" == []
 -}
-compress = undefined
+compress :: String -> [(Int, Char)]
+compress str = [(length cs, head cs) | cs <- group str]
+-- compress str = map (\cs -> (length cs, head cs)) $ group str
+-- compress = (map (\cs -> (length cs, head cs))) . group
 
 
 -- [nehéz] Definiálj egy decompress függvényt, mely visszaállítja a karaktersorozatot a tömörített formából!
@@ -94,7 +109,12 @@ decompress [(4,'a'), (1,'b'), (2,'c'), (2,'a'), (1,'d'), (4,'e')] == "aaaabccaad
 decompress [(1,'o'),(1,'h'),(1,' '),(1,'h'),(1,'e'),(2,'l'),(1,'o'),(2,'!')] == "oh hello!!"
 decompress [] == ""
 -}
-decompress = undefined
+decompress :: [(Int, Char)] -> String
+decompress ls = concat [ replicate n c | (n, c) <- ls]
+-- decompress ls = concat [ [c | _ <- [1..n]] | (n, c) <- ls]
+-- decompress ls = concat $ zipWith replicate ints chars where (ints, chars) = unzip ls
+-- decompress ls = concat $ uncurry (zipWith replicate) $ unzip ls
+-- decompress = concat . (uncurry $ zipWith replicate) . unzip
 
 
 -- 4. Óra
@@ -115,7 +135,11 @@ not (paren '(' ']')
 not (paren '(' '(')
 not (paren '[' 'a')
 -}
-paren = undefined
+paren :: Char -> Char -> Bool
+paren '(' ')' = True
+paren '[' ']' = True
+paren '{' '}' = True
+paren _ _ = False
 
 
 -- Adjunk össze két óra,perc párt.
@@ -124,7 +148,12 @@ addTime (00,45) (10,45) == (11,30)
 addTime (23,30) (00,31) == (00,01)
 -}
 addTime :: (Int, Int) -> (Int, Int) -> (Int, Int)
-addTime = undefined
+addTime (h1,m1) (h2,m2) = (hMod, mMod)
+    where
+        m = m1 + m2
+        h = h1 + h2
+        (mDiv, mMod) = m `divMod` 60
+        hMod = (h + mDiv) `mod` 24
 
 
 -- Adjuk össze két lista első elemeit!
@@ -132,7 +161,8 @@ addTime = undefined
 addHeads [1..] [10..] == 11
 addHeads [0,1] [1,20] == 1
 -}
-addHeads = undefined
+addHeads :: Num a => [a] -> [a] -> a
+addHeads (x:_) (y:_) = x + y
 
 
 -- [nehéz] Adjuk össze egy lista összes elemét. A logika ugyanaz, mint az előző feladatnál.
