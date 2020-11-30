@@ -53,7 +53,7 @@ listaÉs [] == Igaz
 listaÉs [Igaz, Hamis] == Hamis
 
 -- any
-bármelyik :: (a -> Logikai) -> [a] -> Bool
+bármelyik :: (a -> Logikai) -> [a] -> Logikai
 -- Tesztek:
 bármelyik (\l -> l `egyenlő` []) [[1..10], [1..20], []]
 
